@@ -23,6 +23,7 @@
 #include <sensors/sensors.h>
 
 #include <algorithm>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
@@ -38,7 +39,7 @@ class libsensors_handle
 {
 public:
     libsensors_handle(std::string const& config_path = {})
-        : m_path{config_path}, m_config{fopen(m_path.c_str(), "r")}
+        : m_path{config_path}, m_config{std::fopen(m_path.c_str(), "r")}
     {
         if (!m_path.empty() && !m_config)
             throw init_error{std::string{"Failed to open config file ("} + std::strerror(errno) + ")"};
@@ -51,7 +52,7 @@ public:
     {
         sensors_cleanup();
         if (m_config)
-            fclose(m_config);
+            std::fclose(m_config);
     }
 
     std::string const& config_path() const
