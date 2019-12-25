@@ -1,5 +1,5 @@
 # libsensors-c++
-The lm-sensors package allows linux users to interact with the hardware monitoring chip(s) in their systems and includes libsensors, a C API to these chips. The aim of libsensors-c++ is to provide an easy to use, class-based C++ interface to libsensors.
+The [lm-sensors](https://github.com/lm-sensors/lm-sensors) package allows linux users to interact with the hardware monitoring chip(s) in their systems and includes libsensors, a C API to these chips. The aim of libsensors-c++ is to provide an easy to use, class-based C++ interface to libsensors.
 
 ## Installation
 A C++17-conforming compiler, libsensors and its development headers are required.
