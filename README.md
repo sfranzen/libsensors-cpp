@@ -22,7 +22,7 @@ std::cout << temp.read() << '\n';
 ```
 
 ## Usage
-The library provides two public headers, similar to libsensors: `<sensors-c++/sensors.h>` and `<sensors-c++/error.h>`. Neither includes any libsensors headers and it is not necessary to initialise or interact with libsensors directly yourself. All classes and functions are defined in the namespace `sensors` and named like their counterparts in libsensors.
+The library provides two public headers, similar to libsensors: [`<sensors-c++/sensors.h>`](include/sensors-c++/sensors.h) and [`<sensors-c++/error.h>`](include/sensors-c++/error.h). Neither includes any libsensors headers and it is not necessary to initialise or interact with libsensors directly yourself. All classes and functions are defined in the namespace `sensors` and named like their counterparts in libsensors.
 
 ### Classes
 The following classes are provided in the `<sensors-c++/sensors.h>` header:
