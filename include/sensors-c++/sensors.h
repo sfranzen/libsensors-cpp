@@ -152,10 +152,15 @@ public:
     // sensors::parse_error if no chip was found matching the given path.
     explicit chip_name(std::string const& path);
 
+    // Chip data
     int address() const;
     bus_id bus() const;
     std::string prefix() const;
     std::string path() const;
+
+    // Chip name as obtained from sensors_snprintf_chip_name. Will throw a
+    // sensors::io_error if that function reports an error.
+    std::string name() const;
 
     std::vector<feature> features() const;
 
@@ -177,10 +182,18 @@ public:
     // such feature was found.
     feature(std::string const &chip_path, std::string const &feature_name);
 
+    // Parent chip
     chip_name const& chip() const;
+
+    // Feature data
     std::string name() const;
     int number() const;
     feature_type type() const;
+
+    // Feature label as reported by sensors_get_label; if no label exists, the
+    // output is the same as name(). Throws sensors::io_error if the call to
+    // sensors_get_label failed.
+    std::string label() const;
 
     // Return all subfeatures of this feature
     std::vector<sensors::subfeature> subfeatures() const;
@@ -206,7 +219,10 @@ public:
     // such subfeature was found.
     explicit subfeature(std::string const &path);
 
+    // Parent feature
     sensors::feature const& feature() const;
+
+    // Subfeature data
     std::string name() const;
     int number() const;
     subfeature_type type() const;

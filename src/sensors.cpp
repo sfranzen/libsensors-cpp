@@ -23,6 +23,7 @@
 #include <sensors/sensors.h>
 
 #include <algorithm>
+#include <cstdlib>
 #include <cstring>
 #include <filesystem>
 #include <functional>
@@ -254,6 +255,18 @@ std::string chip_name::path() const
     return m_impl->get().path;
 }
 
+std::string chip_name::name() const
+{
+    auto const size = sensors_snprintf_chip_name(nullptr, 0, **this);
+    if (size < 0)
+        throw io_error{std::strerror(size)};
+    std::string name(size, '\0');
+    auto const error = sensors_snprintf_chip_name(name.data(), size, **this);
+    if (error < 0)
+        throw io_error{std::strerror(error)};
+    return name;
+}
+
 std::vector<feature> chip_name::features() const
 {
     int nr = 0;
@@ -303,6 +316,16 @@ feature_type feature::type() const
     case SENSORS_FEATURE_BEEP_ENABLE: return feature_type::beep;
     default: return feature_type::unknown;
     }
+}
+
+std::string feature::label() const
+{
+    auto const c_ptr = sensors_get_label(*chip(), **this);
+    if (!c_ptr)
+        throw io_error{"Failed to obtain feature label"};
+    std::string label {c_ptr};
+    std::free(c_ptr);
+    return label;
 }
 
 std::optional<subfeature> feature::subfeature(subfeature_type type) const

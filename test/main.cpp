@@ -31,7 +31,7 @@ int main()
     subfeature sub{"/sys/class/hwmon/hwmon0/temp1_input"};
     auto feat = sub.feature();
     auto chip = feat.chip();
-    std::cout << chip.prefix() << " " << feat.name() << " " << sub.name() << "\n";
+    std::cout << chip.prefix() << " " << chip.name() << " " << feat.name() << " " << feat.label() << " " << sub.name() << "\n";
     std::cout << std::boolalpha << sub.readable() << " " << sub.writable() << " " << sub.number() << "\n";
     std:: cout << sub.read() << "\n";
 
