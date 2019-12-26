@@ -128,7 +128,7 @@ private:
 // sensors_init() function and will throw a sensors::init_error if this file was
 // not found or there was an error in sensors_init. Calling this function is
 // optional and the argument may be empty; in both cases libsensors will be
-// loaded without a configuration. Referencing any objects created before
+// loaded with the default configuration. Referencing any objects created before
 // calling this function is undefined behaviour.
 void load_config(std::string const& path);
 
@@ -177,10 +177,15 @@ public:
     // its parent chip_name
     feature() = delete;
 
+    // Construct a feature from its full filesystem path. This may include the
+    // name of a subfeature, e.g. /sys/class/hwmon/hwmon0/temp1[_input]. Throws
+    // a sensors::parse_error if no such feature was found.
+    explicit feature(std::string const& full_path);
+
     // Construct a feature from the filesystem path of its chip and its name,
     // e.g. /sys/class/hwmon/hwmon0, temp1. Throws a sensors::parse_error if no
     // such feature was found.
-    feature(std::string const &chip_path, std::string const &feature_name);
+    feature(std::string const& chip_path, std::string const& feature_name);
 
     // Parent chip
     chip_name const& chip() const;
