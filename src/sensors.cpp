@@ -131,9 +131,7 @@ struct _sensors_impl<feature>::impl : public impl_base<sensors_feature>
     {
         fs::path const path {full_path};
         auto const filename = path.filename().string();
-        auto const pos = filename.rfind('_');
-        auto const feat_name = pos < std::string::npos ? filename.substr(0, pos) : filename;
-        return find(path.parent_path(), feat_name);
+        return find(path.parent_path(), filename.substr(0, filename.rfind('_')));
     }
 
     // E.g. /sys/class/hwmon/hwmon0, temp1
