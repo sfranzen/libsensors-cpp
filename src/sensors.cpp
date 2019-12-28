@@ -130,21 +130,13 @@ struct _sensors_impl<feature>::impl : public impl_base<sensors_feature>
 
     impl(chip_name chip, sensors_feature const& feat) : impl_base{feat}, m_chip{std::move(chip)} {}
 
-    // E.g. /sys/class/hwmon/hwmon0/temp1_input -> chip hwmon0, feature temp1
-    impl static find(std::string_view full_path)
-    {
-        fs::path const path {full_path};
-        auto const filename = path.filename().string();
-        return find(path.parent_path().string(), std::string_view{filename}.substr(0, filename.rfind('_')));
-    }
-
     // E.g. /sys/class/hwmon/hwmon0, temp1
     impl static find(std::string_view chip_path, std::string_view feature_name)
     {
         int nr = 0;
         chip_name chip {chip_path};
         while (auto feat = sensors_get_features(*chip, &nr)) {
-            if (feat->name == feature_name)
+            if (feature_name.rfind(feat->name, 0) == 0)
                 return {std::move(chip), *feat};
         }
         throw parse_error{"Feature " + feature_name + " not found on chip " + chip.prefix()};
@@ -166,9 +158,9 @@ struct _sensors_impl<subfeature>::impl : public impl_base<sensors_subfeature>
         if (!path.has_filename())
             throw parse_error{"Path does not contain filename: " + full_path};
 
-        auto const sub_name = path.filename().string();
         int nr = 0;
-        ::feature feat {full_path};
+        auto const sub_name = path.filename().string();
+        ::feature feat {full_path, sub_name};
         while (auto sub = sensors_get_all_subfeatures(*feat.chip(), *feat, &nr))
             if (sub->name == sub_name)
                 return {std::move(feat), *sub};
@@ -282,7 +274,7 @@ std::vector<feature> chip_name::features() const
 // sensors::feature
 //
 feature::feature(std::string_view full_path)
-    : feature{impl::find(full_path)}
+    : feature{full_path, fs::path{full_path}.filename().string()}
 {}
 
 feature::feature(std::string_view chip_path, std::string_view feature_name)
