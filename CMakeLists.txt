@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.1.0)
 
 project(sensors-c++ VERSION 3.6.0 LANGUAGES CXX)
 
+option(BUILD_TESTING "Build tests" Off)
+
 set(CMAKE_CXX_STANDARD 17)
 
 find_library(libsensors sensors)
@@ -34,7 +36,7 @@ include(GNUInstallDirs)
 
 install(TARGETS ${PROJECT_NAME}
     EXPORT "${PROJECT_NAME}-config"
-    LIBRARY DESTINATION ${CMAKE_LIBRARY_PATH}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -46,4 +48,6 @@ export(TARGETS ${PROJECT_NAME}
     FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
 )
 
-add_subdirectory(test)
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()
