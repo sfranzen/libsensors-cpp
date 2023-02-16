@@ -251,13 +251,16 @@ std::string_view chip_name::path() const
 
 std::string chip_name::name() const
 {
-    auto const size = sensors_snprintf_chip_name(nullptr, 0, **this);
+    auto size = sensors_snprintf_chip_name(nullptr, 0, **this);
     if (size < 0)
         throw io_error{std::strerror(size)};
+    // snprintf requires space for '\0' to be accounted for
+    size += 1;
     std::string name(size, '\0');
     auto const written = sensors_snprintf_chip_name(name.data(), size, **this);
     if (written < 0)
         throw io_error{std::strerror(written)};
+    name.pop_back();
     return name;
 }
 
